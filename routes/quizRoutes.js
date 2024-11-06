@@ -25,7 +25,7 @@ const quizValidation = [
 // Validation rules for submitting an answer
 const answerValidation = [
     param('quizId').isUUID().withMessage('Quiz ID must be a valid UUID'),
-    param('questionId').isUUID().withMessage('Question ID must be a valid UUID'),
+    param('questionId').isInt({min: 1}).withMessage('Question ID must be a valid integer'),
     body('selectedOption').isInt({ min: 0, max: 3 }).withMessage('Selected option must be an index between 0 and 3'),
     body('userId').notEmpty().withMessage('User ID is required')
 ];
@@ -43,8 +43,8 @@ const getResultsValidation = [
 
 // Routes
 router.post('/', quizValidation, handleValidationErrors, quizController.createQuiz);
-router.get('/:id', getQuizValidation, quizController.getQuiz);
-router.post('/:quizId/questions/:questionId/answer', answerValidation, quizController.submitAnswer);
-router.get('/:quizId/results', getResultsValidation, quizController.getResults);
+router.get('/:id', getQuizValidation, handleValidationErrors, quizController.getQuiz);
+router.post('/:quizId/questions/:questionId/answer', answerValidation, handleValidationErrors, quizController.submitAnswer);
+router.get('/:quizId/results', getResultsValidation, handleValidationErrors, quizController.getResults);
 
 module.exports = router;
